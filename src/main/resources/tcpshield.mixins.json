@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "github.totorewa.tcpshield.fabric.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "listener.ServerHandshakePacketListenerImplMixin",
+    "packet.ClientIntentionPacketMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

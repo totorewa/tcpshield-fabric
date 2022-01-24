@@ -18,17 +18,12 @@ public abstract class ConfigProvider {
 	protected boolean onlyProxy = true;
 	protected String timestampValidationMode = "htpdate";
 	protected boolean doDebug = true; // Fail-safe default set to true
-	protected boolean geyser = false;
 
 	protected File dataFolder;
 	protected File configFile;
 
 	public boolean isOnlyProxy() {
 		return onlyProxy;
-	}
-
-	public boolean isGeyser() {
-		return geyser;
 	}
 
 	public String getTimestampValidationMode() {

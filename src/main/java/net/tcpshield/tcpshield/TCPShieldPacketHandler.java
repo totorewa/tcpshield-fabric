@@ -1,6 +1,5 @@
 package net.tcpshield.tcpshield;
 
-import net.tcpshield.tcpshield.geyser.GeyserUtils;
 import net.tcpshield.tcpshield.provider.PacketProvider;
 import net.tcpshield.tcpshield.provider.PlayerProvider;
 import net.tcpshield.tcpshield.util.exception.parse.InvalidPayloadException;
@@ -115,21 +114,6 @@ public class TCPShieldPacketHandler {
 			String host;
 			int port;
 
-			if (timestamp == 0 && GeyserUtils.GEYSER_SUPPORT_ENABLED) {
-				// Remap the altered layout
-				ipData = payload[0];
-				signature = payload[1];
-				hostname = payload[3];
-
-				// This is annoying having to have this in both blocks but w/e
-				ipParts = ipData.split(":");
-				host = ipParts[0];
-				port = Integer.parseInt(ipParts[1]);
-
-				if (!signature.equals(GeyserUtils.SESSION_SECRET)) {
-					throw new InvalidSecretException("Invalid secret: " + signature);
-				}
-			} else {
 				ipParts = ipData.split(":");
 				host = ipParts[0];
 				port = Integer.parseInt(ipParts[1]);
@@ -141,7 +125,6 @@ public class TCPShieldPacketHandler {
 
 				if (!signatureValidator.validate(reconstructedPayload, signature))
 					throw new SignatureValidationException();
-			}
 
 			InetSocketAddress newIP = new InetSocketAddress(host, port);
 			player.setIP(newIP);

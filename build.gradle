@@ -1,178 +1,55 @@
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import org.yaml.snakeyaml.DumperOptions
-import org.yaml.snakeyaml.Yaml
-
-import java.nio.charset.StandardCharsets
-
-// --
-// Building
-// --
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath(group: 'org.yaml', name: 'snakeyaml', version: '1.26')
-        classpath(group: 'com.google.code.gson', name: 'gson', version: '2.8.6')
-    }
-}
-
 plugins {
-    id 'java'
-    id 'idea'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
 }
 
-// --
-// Variables
-// --
-version = '2.5.5'
-group = 'net.tcpshield.tcpshield'
-archivesBaseName = 'TCPShield'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
-// --
-// Misc.
-// --
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs('src/main/java')
-        }
-        resources {
-            srcDirs('src/main/resources')
-        }
-    }
-    test {
-        java {
-            srcDirs('src/test/java')
-        }
-        resources {
-            srcDirs('src/test/resources')
-        }
-    }
-}
-
-compileJava {
-    sourceCompatibility = "8"
-    targetCompatibility = "8"
-    options.encoding = 'UTF-8'
-}
-
-// --
-// Dependencies
-// --
-repositories {
-    maven {
-        url = 'https://repo1.maven.org/maven2/'
-    }
-    maven {
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-    }
-    maven {
-        url = 'https://repo.dmulloy2.net/nexus/repository/public/'
-    }
-    maven {
-        url = 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
-    maven {
-        url = 'https://papermc.io/repo/repository/maven-public/'
-    }
-    maven {
-        url = 'https://repo.velocitypowered.com/snapshots/'
-    }
-    maven {
-        url = "https://repo.opencollab.dev/maven-snapshots/"
-    }
-}
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
 dependencies {
-    // Bukkit
-    compileOnly group: 'org.spigotmc', name: 'spigot-api', version: '1.11-R0.1-SNAPSHOT'
-    compileOnly group: 'com.comphenix.protocol', name: 'ProtocolLib', version: '4.4.0'
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // Paper
-    compileOnly group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.15.2-R0.1-SNAPSHOT'
+    modImplementation "net.fabricmc.fabric-api:fabric-api-base:${project.fabric_api_base_version}"
 
-    // BungeeCord
-    compileOnly group: 'net.md-5', name: 'bungeecord-api', version: '1.14-SNAPSHOT'
-
-    // Velocity
-    compileOnly group: 'com.velocitypowered', name: 'velocity-api', version: '1.0.0-SNAPSHOT'
-
-    // Testing
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0-M1'
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0-M1'
-    compileOnly 'org.geysermc.floodgate:api:2.0-SNAPSHOT'
+    compileOnly "com.google.guava:guava:31.0.1-jre"
 }
 
 processResources {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
+    inputs.property "version", project.version
 
-// --
-// Build Tasks
-// --
-test {
-    useJUnitPlatform()
-}
-
-configurations {
-    testImplementation.extendsFrom compileOnly
-}
-
-task updateVersion {
-    updateYamls()
-    updateJsons()
-}
-
-void updateYamls() {
-    DumperOptions options = new DumperOptions()
-    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
-    options.setSplitLines(false)
-    options.setPrettyFlow(true)
-
-    def yaml = new Yaml(options)
-
-    def bukkitYamlFile = new File('src/main/resources/plugin.yml')
-    def bungeeYamlFile = new File('src/main/resources/bungee.yml')
-
-    def files = [bukkitYamlFile, bungeeYamlFile]
-    files.each { file ->
-        file.newInputStream().withCloseable { inputStream ->
-            def cfg = yaml.load(inputStream)
-            cfg.put("version", version)
-
-            new FileWriter(file).withCloseable { writer ->
-                yaml.dump(cfg, writer)
-            }
-        }
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 
-void updateJsons() {
-    def velocityJson = new File('src/main/resources/velocity-plugin.json')
+tasks.withType(JavaCompile).configureEach {
+    // ensure that the encoding is set to UTF-8, no matter what the system default is
+    // this fixes some edge cases with special characters not displaying correctly
+    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+    // If Javadoc is generated, this must be specified in that task too.
+    it.options.encoding = "UTF-8"
 
-    def files = [velocityJson]
-    files.each { file ->
-        file.newInputStream().withCloseable { inputStream ->
-            new InputStreamReader(inputStream, StandardCharsets.UTF_8).withCloseable { inputStreamReader ->
-                JsonObject object = JsonParser.parseReader(inputStreamReader).getAsJsonObject()
-                object.addProperty("version", version.toString())
-
-                new FileWriter(file).withCloseable { writer ->
-                    writer.write(object.toString())
-                }
-            }
-        }
-
+    def targetVersion = 8
+    if (JavaVersion.current().isJava9Compatible()) {
+        it.options.release = targetVersion
     }
 }
 
-build.dependsOn updateVersion
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}"}
+    }
+}

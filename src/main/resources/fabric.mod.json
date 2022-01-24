@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "tcpshield-fabric",
+  "version": "${version}",
+  "name": "TCPShield Fabric",
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": ">=0.28.5",
+    "minecraft": ">=1.14.x"
+  },
+  "entrypoints": {
+    "server": [
+      "github.totorewa.tcpshield.fabric.TcpShieldMod"
+    ]
+  },
+  "mixins": [
+    "tcpshield.mixins.json"
+  ]
+}
