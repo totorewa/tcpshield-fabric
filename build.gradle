@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'fabric-loom' version '0.10-SNAPSHOT'
 }
 
@@ -17,6 +18,8 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api-base:${project.fabric_api_base_version}"
 
+    implementation 'org.yaml:snakeyaml:1.30'
+    shadow 'org.yaml:snakeyaml:1.30'
     compileOnly "com.google.guava:guava:31.0.1-jre"
 }
 
@@ -52,4 +55,14 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
     }
+}
+
+shadowJar {
+    relocate 'org.yaml.snakeyaml', 'github.totorewa.tcpshield.fabric.snakeyaml'
+    configurations = [project.configurations.shadow]
+}
+
+remapJar {
+    dependsOn shadowJar
+    input.set shadowJar.archiveFile
 }
