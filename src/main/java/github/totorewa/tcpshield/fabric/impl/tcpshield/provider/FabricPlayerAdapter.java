@@ -1,4 +1,4 @@
-package github.totorewa.tcpshield.fabric.tcpshield.provider;
+package github.totorewa.tcpshield.fabric.impl.tcpshield.provider;
 
 import github.totorewa.tcpshield.fabric.event.HandshakeContext;
 import net.tcpshield.tcpshield.provider.PlayerProvider;

@@ -1,9 +1,9 @@
-package github.totorewa.tcpshield.fabric.tcpshield.handler;
+package github.totorewa.tcpshield.fabric.impl.tcpshield.handler;
 
 import github.totorewa.tcpshield.fabric.event.Handshake;
 import github.totorewa.tcpshield.fabric.event.HandshakeContext;
-import github.totorewa.tcpshield.fabric.tcpshield.provider.FabricPacketAdapter;
-import github.totorewa.tcpshield.fabric.tcpshield.provider.FabricPlayerAdapter;
+import github.totorewa.tcpshield.fabric.impl.tcpshield.provider.FabricPacketAdapter;
+import github.totorewa.tcpshield.fabric.impl.tcpshield.provider.FabricPlayerAdapter;
 import net.tcpshield.tcpshield.TCPShieldPlugin;
 import net.tcpshield.tcpshield.util.exception.phase.HandshakeException;
 

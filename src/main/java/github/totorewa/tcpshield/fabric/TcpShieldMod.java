@@ -2,7 +2,7 @@ package github.totorewa.tcpshield.fabric;
 
 import github.totorewa.tcpshield.fabric.config.ConfigManager;
 import github.totorewa.tcpshield.fabric.event.Handshake;
-import github.totorewa.tcpshield.fabric.tcpshield.handler.FabricHandshakeHandler;
+import github.totorewa.tcpshield.fabric.impl.tcpshield.handler.FabricHandshakeHandler;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.tcpshield.tcpshield.TCPShieldPacketHandler;
 import net.tcpshield.tcpshield.TCPShieldPlugin;
@@ -10,7 +10,6 @@ import net.tcpshield.tcpshield.provider.ConfigProvider;
 import net.tcpshield.tcpshield.util.Debugger;
 import net.tcpshield.tcpshield.util.exception.phase.InitializationException;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;

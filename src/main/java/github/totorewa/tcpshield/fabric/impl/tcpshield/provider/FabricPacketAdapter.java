@@ -1,4 +1,4 @@
-package github.totorewa.tcpshield.fabric.tcpshield.provider;
+package github.totorewa.tcpshield.fabric.impl.tcpshield.provider;
 
 import github.totorewa.tcpshield.fabric.api.network.HandshakePacket;
 import net.tcpshield.tcpshield.provider.PacketProvider;
@@ -13,11 +13,11 @@ public class FabricPacketAdapter implements PacketProvider {
 
     @Override
     public String getPayloadString() {
-        return this.packet.tcpShield$getHostName();
+        return this.packet.getHostName();
     }
 
     @Override
     public void setPacketHostname(String hostname) throws PacketManipulationException {
-        this.packet.tcpShield$setHostName(hostname);
+        this.packet.setHostName(hostname);
     }
 }

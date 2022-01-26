@@ -13,6 +13,7 @@ public class HandshakeContext {
     private final ConnectionDetails connectionDetails;
     private String hostAddress;
     private boolean connectionRejected;
+    private boolean hostChanged;
 
     public HandshakeContext(HandshakePacket packet, ConnectionDetails connectionDetails) {
         this.packet = packet;
@@ -25,12 +26,20 @@ public class HandshakeContext {
         return connectionRejected;
     }
 
+    public boolean hasHostAddressChanged() {
+        return this.hostChanged;
+    }
+
     public UUID getId() {
         return id;
     }
 
     public String getOriginalHostAddress() {
         return this.connectionDetails.getHostName();
+    }
+
+    public int getOriginalPort() {
+        return this.connectionDetails.getPort();
     }
 
     public HandshakePacket getPacket() {
@@ -47,6 +56,7 @@ public class HandshakeContext {
 
     public void setHostAddress(InetSocketAddress ip) throws PlayerManipulationException {
         this.hostAddress = ip.getAddress().getHostAddress();
+        this.hostChanged = true;
     }
 
     public void reject() {

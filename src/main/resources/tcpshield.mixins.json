@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "listener.ServerHandshakePacketListenerImplMixin",
-    "packet.ClientIntentionPacketMixin"
+    "packet.ClientIntentionPacketAccessor",
+    "ClientConnectionAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
