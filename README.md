@@ -12,18 +12,22 @@ It also parses passed IP addresses so the server is aware of the real player IP 
 
 This mod aims to port the plugin to the Fabric loader to support Fabric servers.
 
-## Compatibility
+## Disclaimer
+This is a third-party mod **not** in affiliation with TCPShield and you should **not**
+expect TCPShield to offer support for any problems you may encounter relating to the use of this mod.
 
-This mod requires the [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api) 
-and the [Fabric loader](https://fabricmc.net/).
-
-For compatibility with CraftBukkit, Spigot, Paper, BungeeCord and Velocity,
-visit the [original plugin](https://github.com/TCPShield/RealIP).
-
-## Getting the mod
+## Getting started
 
 You can either clone this repository and build the mod yourself, or you can download
 a prebuilt jar from https://github.com/totorewa/tcpshield-fabric/tags
+
+### Compatibility
+
+This mod requires the [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api) 
+and the [Fabric loader](https://fabricmc.net/). **Geyser is not supported.**
+
+For compatibility with CraftBukkit, Spigot, Paper, BungeeCord and Velocity,
+visit the [original plugin](https://github.com/TCPShield/RealIP).
 
 ### Configuring the mod
 
