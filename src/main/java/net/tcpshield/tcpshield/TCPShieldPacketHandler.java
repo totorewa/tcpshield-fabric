@@ -1,3 +1,26 @@
+/*
+MIT License
+
+Copyright (c) 2020 TCPShield
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 package net.tcpshield.tcpshield;
 
 import net.tcpshield.tcpshield.provider.PacketProvider;
@@ -114,6 +137,23 @@ public class TCPShieldPacketHandler {
 			String host;
 			int port;
 
+			// Toto start
+			/*
+			if (timestamp == 0 && GeyserUtils.GEYSER_SUPPORT_ENABLED) {
+				// Remap the altered layout
+				ipData = payload[0];
+				signature = payload[1];
+				hostname = payload[3];
+
+				// This is annoying having to have this in both blocks but w/e
+				ipParts = ipData.split(":");
+				host = ipParts[0];
+				port = Integer.parseInt(ipParts[1]);
+
+				if (!signature.equals(GeyserUtils.SESSION_SECRET)) {
+					throw new InvalidSecretException("Invalid secret: " + signature);
+				}
+			} else {*/
 				ipParts = ipData.split(":");
 				host = ipParts[0];
 				port = Integer.parseInt(ipParts[1]);
@@ -125,7 +165,8 @@ public class TCPShieldPacketHandler {
 
 				if (!signatureValidator.validate(reconstructedPayload, signature))
 					throw new SignatureValidationException();
-
+			// }
+			// Toto end
 			InetSocketAddress newIP = new InetSocketAddress(host, port);
 			player.setIP(newIP);
 
@@ -152,7 +193,13 @@ public class TCPShieldPacketHandler {
 			if (plugin.getConfigProvider().isOnlyProxy())
 				player.disconnect();
 
-			throw new HandshakeException(e);
+			// Toto start
+			throw new HandshakeException(
+					String.format("Provided timestamp: %d vs. system timestamp: %d.",
+							e.getTimestamp(),
+							e.getTimestampValidator().getUnixTime()),
+					e);
+			// Toto end
 		} catch (SignatureValidationException e) {
 			plugin.getDebugger().warn(
 					"%s[%s/%s] provided valid handshake information, but signing check failed. Raw payload = \"%s\"",
